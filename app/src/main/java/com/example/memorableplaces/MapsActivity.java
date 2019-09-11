@@ -12,6 +12,7 @@ import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -116,6 +117,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             MainActivity.places.add(s);
                             MainActivity.latLngs.add(latLng);
                             MainActivity.arrayAdapter.notifyDataSetChanged();
+                            Toast.makeText(getApplicationContext(),"Location saved",Toast.LENGTH_SHORT).show();
                         }
                     }
                 } catch (Exception e) {
