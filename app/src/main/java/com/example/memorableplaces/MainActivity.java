@@ -1,6 +1,8 @@
 package com.example.memorableplaces;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -26,8 +28,35 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         listView = findViewById(R.id.listView);
-        places.add("add a new place");
-        latLngs.add(new LatLng(0,0));
+
+        places.clear();
+        latLngs.clear();
+        ArrayList<String> lats = new ArrayList<>();
+        ArrayList<String> longs = new ArrayList<>();
+
+        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("com.example.memorableplaces", Context.MODE_PRIVATE);
+        try {
+
+            places = (ArrayList<String>) ObjectSerializer.deserialize(sharedPreferences.getString("places",
+                    ObjectSerializer.serialize(new ArrayList<String>())));
+            lats = (ArrayList<String>) ObjectSerializer.deserialize(sharedPreferences.getString("lat",
+                    ObjectSerializer.serialize(new ArrayList<String>())));
+            longs = (ArrayList<String>) ObjectSerializer.deserialize(sharedPreferences.getString("lng",
+                    ObjectSerializer.serialize(new ArrayList<String>())));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if (places.size() > 0 && lats.size() > 0 && longs.size() > 0) {
+            if (places.size() == lats.size() && lats.size() == longs.size()) {
+                for (int i = 0; i < lats.size(); i++) {
+                    latLngs.add(new LatLng(Double.parseDouble(lats.get(i)), Double.parseDouble(longs.get(i))));
+                }
+            }
+        } else {
+            places.add("add a new place");
+            latLngs.add(new LatLng(0,0));
+        }
 
         arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_activated_1,places);
         listView.setAdapter(arrayAdapter);
@@ -40,4 +69,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+    }
 }
+
+

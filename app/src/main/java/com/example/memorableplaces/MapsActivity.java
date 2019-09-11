@@ -3,6 +3,7 @@ package com.example.memorableplaces;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -26,6 +27,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -117,6 +119,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             MainActivity.places.add(s);
                             MainActivity.latLngs.add(latLng);
                             MainActivity.arrayAdapter.notifyDataSetChanged();
+
+                            SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("com.example.memorableplaces",Context.MODE_PRIVATE);
+                            try {
+                                sharedPreferences.edit().putString("places",ObjectSerializer.serialize(MainActivity.places)).apply();
+                                ArrayList<String> lat = new ArrayList<>();
+                                ArrayList<String> lng = new ArrayList<>();
+                                for (LatLng coords : MainActivity.latLngs) {
+                                    lat.add(Double.toString(coords.latitude));
+                                    lng.add(Double.toString(coords.longitude));
+                                }
+                                sharedPreferences.edit().putString("lat",ObjectSerializer.serialize(lat)).apply();
+                                sharedPreferences.edit().putString("lng",ObjectSerializer.serialize(lng)).apply();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
                             Toast.makeText(getApplicationContext(),"Location saved",Toast.LENGTH_SHORT).show();
                         }
                     }
