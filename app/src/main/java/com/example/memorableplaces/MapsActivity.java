@@ -35,7 +35,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     private GoogleMap mMap;
-
     LocationManager locationManager;
     LocationListener locationListener;
     int locationNumber;

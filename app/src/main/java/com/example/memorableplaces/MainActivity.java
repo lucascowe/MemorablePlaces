@@ -36,7 +36,6 @@ public class MainActivity extends AppCompatActivity {
 
         SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("com.example.memorableplaces", Context.MODE_PRIVATE);
         try {
-
             places = (ArrayList<String>) ObjectSerializer.deserialize(sharedPreferences.getString("places",
                     ObjectSerializer.serialize(new ArrayList<String>())));
             lats = (ArrayList<String>) ObjectSerializer.deserialize(sharedPreferences.getString("lat",
